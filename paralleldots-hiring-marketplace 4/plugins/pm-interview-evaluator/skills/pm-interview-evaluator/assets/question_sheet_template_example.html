@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Interview Question Sheet — Reference Example</title>
+<style>
+  :root {
+    --bg:#faf9f5; --surface:#ffffff; --surface-muted:#f3f1ea;
+    --text-primary:#1f1f1c; --text-secondary:#5f5e5a; --text-tertiary:#888780;
+    --border:#e6e3d8; --border-strong:#cfccc0; --accent:#c96442;
+    --red-fill:#fceaea; --red-border:#e24b4a; --red-text:#791f1f;
+    --amber-fill:#faeeda; --amber-border:#ef9f27; --amber-text:#633806;
+    --blue-fill:#e6f1fb; --blue-border:#378add; --blue-text:#0c447c;
+    --green-fill:#eaf3de; --green-border:#639922; --green-text:#27500a;
+    --purple-fill:#eeedfe; --purple-border:#534ab7; --purple-text:#26215c;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html,body { background:var(--bg); color:var(--text-primary); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; line-height:1.55; font-size:14px; }
+  .container { max-width:900px; margin:0 auto; padding:40px 34px 64px; }
+
+  header.sheet-head { border-bottom:1px solid var(--border); padding-bottom:20px; margin-bottom:24px; }
+  header.sheet-head .eyebrow { font-size:11px; text-transform:uppercase; letter-spacing:0.11em; color:var(--accent); font-weight:700; margin-bottom:8px; }
+  header.sheet-head h1 { font-size:27px; font-weight:600; margin-bottom:6px; letter-spacing:-0.015em; }
+  header.sheet-head .meta { color:var(--text-secondary); font-size:13px; }
+  header.sheet-head .meta span { display:inline-block; margin-right:16px; }
+  header.sheet-head .meta strong { color:var(--text-primary); font-weight:600; }
+
+  /* Quick read */
+  .quickread { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px 20px; margin-bottom:20px; }
+  .quickread h2 { font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-tertiary); border:none; margin:0 0 8px; padding:0; }
+  .quickread p { color:var(--text-secondary); margin:0; font-size:13.5px; line-height:1.6; }
+
+  /* Priority flags callout */
+  .flags { background:linear-gradient(135deg,var(--amber-fill),#fdf7ec 75%); border:1px solid var(--amber-border); border-radius:12px; padding:18px 20px 16px; margin-bottom:28px; }
+  .flags .kicker { font-size:11px; text-transform:uppercase; letter-spacing:0.1em; font-weight:700; color:var(--amber-text); margin-bottom:10px; }
+  .flags ol { margin:0; padding-left:20px; }
+  .flags li { color:var(--text-primary); font-size:13.5px; line-height:1.55; margin-bottom:7px; }
+  .flags li:last-child { margin-bottom:0; }
+  .flags li strong { font-weight:600; }
+
+  h2.bucket { font-size:18px; font-weight:600; margin:0 0 4px; letter-spacing:-0.005em; }
+  .bucket-meta { font-size:12px; color:var(--text-tertiary); margin-bottom:16px; }
+  section.bucket { margin-bottom:34px; page-break-inside:auto; }
+  .bucket-head { border-bottom:2px solid var(--accent); padding-bottom:6px; margin-bottom:16px; }
+  .bucket-head.lead { border-color:var(--red-border); }
+  .bucket-head.lead h2.bucket { color:var(--red-text); }
+
+  /* Question card */
+  .q { background:var(--surface); border:1px solid var(--border); border-radius:11px; padding:15px 18px 14px; margin-bottom:14px; page-break-inside:avoid; }
+  .q .qtop { display:flex; align-items:flex-start; gap:10px; margin-bottom:9px; }
+  .q .qnum { flex-shrink:0; width:22px; height:22px; border-radius:6px; background:var(--surface-muted); color:var(--text-secondary); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:1px; }
+  .q .qtext { font-size:14.5px; font-weight:600; color:var(--text-primary); line-height:1.45; }
+  .tag { display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:2px 8px; border-radius:20px; margin-bottom:9px; }
+  .tag.gap { background:var(--red-fill); color:var(--red-text); border:1px solid var(--red-border); }
+  .tag.inflate { background:var(--amber-fill); color:var(--amber-text); border:1px solid var(--amber-border); }
+  .tag.standout { background:var(--blue-fill); color:var(--blue-text); border:1px solid var(--blue-border); }
+  .tag.rigor { background:var(--purple-fill); color:var(--purple-text); border:1px solid var(--purple-border); }
+  .listen { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:4px 0 12px; }
+  .listen .cell { font-size:12.5px; line-height:1.5; padding:8px 11px; border-radius:8px; }
+  .listen .good { background:var(--green-fill); border:1px solid var(--green-border); color:var(--green-text); }
+  .listen .bad { background:var(--red-fill); border:1px solid var(--red-border); color:var(--red-text); }
+  .listen .cell b { display:block; font-size:10px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:3px; opacity:0.85; }
+
+  footer { margin-top:28px; padding-top:14px; border-top:1px solid var(--border); font-size:11px; color:var(--text-tertiary); text-align:center; }
+
+  @page { size:A4; margin:14mm 12mm; }
+  @media print {
+    body { background:#fff; }
+    .container { padding:0; max-width:none; }
+    .q, .flags, .quickread { box-shadow:none; }
+  }
+</style></head>
+<body>
+<div class="container">
+
+  <header class="sheet-head">
+    <div class="eyebrow">Pre-Interview Question Sheet · ParallelDots</div>
+    <h1>Rohan Mehta — Project Manager (Retail AI Delivery)</h1>
+    <div class="meta">
+      <span><strong>Interviewer:</strong> Akshay</span>
+      <span><strong>Round:</strong> 1 — Screening interview</span>
+      <span><strong>Level:</strong> PM</span>
+    </div>
+  </header>
+
+  <div class="quickread">
+    <h2>Quick read on the candidate</h2>
+    <p>Six years, analyst-to-program-manager arc with some big headline numbers (42% revenue growth, ~300 hrs/month automation, $2.4M portfolio) but thin detail on personal ownership. Strong on tooling (Jira, SQL, Tableau); unproven on client-facing delivery under pressure, which is the core of this role. The progression is fast for the tenure and there's an unexplained 11-month gap — both worth pressing. Priority: verify the headline claims are really his and pin the vague ownership language to specific, named work.</p>
+  </div>
+
+  <div class="flags">
+    <div class="kicker">⚑ Press hardest on these — resume flags</div>
+    <ol>
+      <li><strong>Unexplained gap (Aug 2021 – Jul 2022).</strong> No listed role for ~11 months — get a straight, dated account before anything else; this is the first thing to close.</li>
+      <li><strong>Fast progression vs. tenure.</strong> Business Analyst → Senior Program Manager in ~3 years — confirm the <em>scope</em> actually grew (accounts, autonomy, decisions owned), not just the title.</li>
+      <li><strong>Headline numbers with no attribution.</strong> "42% revenue growth" and "300 analyst-hours/month saved" are large and unexplained — make him show the measurement and separate his contribution from the team's.</li>
+      <li><strong>Vague ownership language.</strong> "Led cross-functional initiatives," "owned strategy" — force each of these down to one named instance with real people and a real friction point, or treat it as inflation.</li>
+    </ol>
+  </div>
+
+  <!-- BUCKET 1 -->
+  <section class="bucket">
+    <div class="bucket-head lead">
+      <h2 class="bucket">Resume deep-dive — gaps, inconsistencies &amp; standout claims</h2>
+    </div>
+    <div class="bucket-meta">Ask these first. Highest-signal block: these questions come straight off <em>his</em> resume, so they're the fastest way to see whether the paper holds up.</div>
+
+    <div class="q">
+      <span class="tag gap">Employment gap</span>
+      <div class="qtop"><span class="qnum">1</span><span class="qtext">There's a gap between August 2021 and July 2022 on your resume — walk me through that period, month to month.</span></div>
+      <div class="listen">
+        <div class="cell good"><b>Strong answer</b>Gives a clear, consistent account — upskilling, health, family, a venture that didn't work out, a slow market — and does it calmly, without over-justifying. Treats the gap as a fact to explain rather than a secret to defend, and the dates line up with what's on the page.</div>
+        <div class="cell bad"><b>Red flags</b>The account is vague or shifts as you press on the months. Watch for defensiveness, over-explaining something simple, or a story that doesn't reconcile with the dates listed on the resume.</div>
+      </div>
+    </div>
+
+    <div class="q">
+      <span class="tag inflate">Progression / possible title inflation</span>
+      <div class="qtop"><span class="qnum">2</span><span class="qtext">You went from Business Analyst to Senior Program Manager in about three years. At each step, what specifically changed in what you owned — budget, headcount, decisions you could make alone?</span></div>
+      <div class="listen">
+        <div class="cell good"><b>Strong answer</b>Points to concrete growth at each step — larger or harder accounts, more autonomy, decisions he could make without sign-off, real budget or headcount. He can name what got harder, not just what got retitled.</div>
+        <div class="cell bad"><b>Red flags</b>The title moved but the described work sounds identical to the junior role. He talks only in responsibilities, never in decisions he owned, and can't say what specifically expanded when the title changed.</div>
+      </div>
+    </div>
+
+    <div class="q">
+      <span class="tag standout">Standout number — revenue</span>
+      <div class="qtop"><span class="qnum">3</span><span class="qtext">Your resume says you "drove 42% revenue growth for the enterprise segment." How was that 42% measured, over what period, and what was <em>your</em> specific contribution versus the rest of the team's?</span></div>
+      <div class="listen">
+        <div class="cell good"><b>Strong answer</b>Names the baseline the 42% was measured against, the time window, and how it was tracked, then draws an honest line between his work and the team's. Comfortable saying "this part was mine, that part wasn't" instead of claiming the whole figure.</div>
+        <div class="cell bad"><b>Red flags</b>Can't explain how the 42% was actually measured, or the baseline keeps moving. It's "we" for everything, and the number loses definition — or quietly shrinks — the moment you ask a second question.</div>
+      </div>
+    </div>
+
+    <div class="q">
+      <span class="tag standout">Standout number — automation</span>
+      <div class="qtop"><span class="qnum">4</span><span class="qtext">You automated the weekly client-reporting pipeline and saved "~300 analyst-hours a month." Walk me through exactly what you built, what it replaced, and how you arrived at 300 hours.</span></div>
+      <div class="listen">
+        <div class="cell good"><b>Strong answer</b>Walks through the real mechanics — what tools, what manual process it replaced, who used the output — and shows the 300 hours has arithmetic behind it (analysts × hours × frequency), not a round number. It's clear he built or drove it, not just requested it.</div>
+        <div class="cell bad"><b>Red flags</b>Hand-waves the "how" and can't reconstruct where 300 came from — it's a tidy guess. Ownership gets fuzzy: it starts to sound like someone else built it and he's claiming the outcome.</div>
+      </div>
+    </div>
+
+    <div class="q">
+      <span class="tag inflate">Vague claim → concrete ownership</span>
+      <div class="qtop"><span class="qnum">5</span><span class="qtext">You wrote "led cross-functional initiatives across product, engineering and data." Pick one. Tell me exactly what you owned, who you had to get aligned, and the moment it nearly fell apart.</span></div>
+      <div class="listen">
+        <div class="cell good"><b>Strong answer</b>Picks one concrete initiative, names the actual people and teams he had to align, and describes a real point of tension and how he worked through it. Uses "I" for what he drove and "we" only where it's genuinely earned.</div>
+        <div class="cell bad"><b>Red flags</b>Stays at the altitude of the resume line — "drove alignment," "got everyone on the same page" — with no specific people or moment of friction. Real cross-functional work always has some; a story with none usually means he watched rather than led.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>ParallelDots · PM/APM hiring · Generated pre-interview question sheet — bring this to the interview and take notes in-line.</footer>
+
+</div>
+</body></html>
