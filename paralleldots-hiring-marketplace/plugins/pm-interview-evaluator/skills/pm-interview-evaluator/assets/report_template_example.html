@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Evaluation — Reference Example (Round 1)</title>
+<style>
+  :root {
+    --bg:#faf9f5; --surface:#ffffff; --surface-muted:#f3f1ea;
+    --text-primary:#1f1f1c; --text-secondary:#5f5e5a; --text-tertiary:#888780;
+    --border:#e6e3d8; --border-strong:#cfccc0; --accent:#c96442;
+    --red-fill:#fceaea; --red-border:#e24b4a; --red-text:#791f1f;
+    --amber-fill:#faeeda; --amber-border:#ef9f27; --amber-text:#633806;
+    --blue-fill:#e6f1fb; --blue-border:#378add; --blue-text:#0c447c;
+    --green-fill:#eaf3de; --green-border:#639922; --green-text:#27500a;
+    --purple-fill:#eeedfe; --purple-border:#534ab7; --purple-text:#26215c;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html,body { background:var(--bg); color:var(--text-primary); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; line-height:1.6; font-size:15px; }
+  .container { max-width:960px; margin:0 auto; padding:48px 32px 80px; }
+  header.report-head { border-bottom:1px solid var(--border); padding-bottom:24px; margin-bottom:28px; }
+  header.report-head .eyebrow { font-size:12px; text-transform:uppercase; letter-spacing:0.09em; color:var(--accent); font-weight:600; margin-bottom:8px; }
+  header.report-head h1 { font-size:30px; font-weight:600; margin-bottom:6px; letter-spacing:-0.015em; }
+  header.report-head .meta { color:var(--text-secondary); font-size:14px; }
+  .summary-grid { display:flex; gap:12px; margin:0 0 28px; flex-wrap:wrap; }
+  .stat { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; position:relative; overflow:hidden; flex:1 1 200px; }
+  .stat::before { content:""; position:absolute; top:0; left:0; width:100%; height:3px; background:var(--accent); opacity:0.85; }
+  .stat .label { font-size:11px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }
+  .stat .value { font-size:21px; font-weight:600; color:var(--text-primary); line-height:1.2; }
+  .stat .value small { font-size:13px; color:var(--text-secondary); font-weight:400; }
+  section { margin-bottom:44px; }
+  h2 { font-size:20px; font-weight:600; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--border); letter-spacing:-0.005em; }
+  h2 small { font-weight:400; font-size:13px; color:var(--text-secondary); }
+  h3 { font-size:16px; font-weight:600; margin:20px 0 8px; }
+  p { margin-bottom:12px; color:var(--text-secondary); }
+  p strong { color:var(--text-primary); font-weight:600; }
+
+  /* Decision hero */
+  .hero { display:flex; gap:28px; align-items:center; border-radius:18px; padding:28px 32px; margin-bottom:28px; border:1px solid; position:relative; }
+  .hero.h-green { background:linear-gradient(135deg,var(--green-fill),#f4f9ee 70%); border-color:var(--green-border); }
+  .hero.h-red { background:linear-gradient(135deg,var(--red-fill),#fdf2f2 70%); border-color:var(--red-border); }
+  .hero.h-amber { background:linear-gradient(135deg,var(--amber-fill),#fdf7ec 70%); border-color:var(--amber-border); }
+  .hero .ring { flex-shrink:0; filter:drop-shadow(0 1px 2px rgba(0,0,0,0.06)); }
+  .hero .wrap { flex:1; min-width:0; }
+  .hero .kicker { font-size:11px; text-transform:uppercase; letter-spacing:0.12em; font-weight:700; margin-bottom:7px; }
+  .hero .headline { font-size:27px; font-weight:700; letter-spacing:-0.015em; line-height:1.12; margin-bottom:10px; }
+  .hero .sub { font-size:15px; line-height:1.55; color:var(--text-primary); margin-bottom:12px; }
+  .hero .note { font-size:13px; line-height:1.5; padding:9px 14px; border-radius:9px; background:rgba(255,255,255,0.6); border:1px solid rgba(0,0,0,0.05); display:block; color:var(--text-primary); }
+  .h-green .kicker,.h-green .headline { color:var(--green-text); }
+  .h-red .kicker,.h-red .headline { color:var(--red-text); }
+  .h-amber .kicker,.h-amber .headline { color:var(--amber-text); }
+
+  .sc-grid { display:flex; gap:16px; flex-wrap:wrap; }
+  .sc-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px 20px; flex:1 1 0; min-width:220px; }
+  .sc-card.strengths { border-left:4px solid var(--green-border); }
+  .sc-card.concerns { border-left:4px solid var(--red-border); }
+  .sc-card h3 { margin-top:0; font-size:13px; text-transform:uppercase; letter-spacing:0.05em; }
+  .sc-card.strengths h3 { color:var(--green-text); }
+  .sc-card.concerns h3 { color:var(--red-text); }
+  .sc-card ul { list-style:none; padding:0; margin:0; }
+  .sc-card ul li { padding:8px 0 8px 18px; border-bottom:1px solid var(--border); font-size:14px; line-height:1.5; color:var(--text-secondary); position:relative; }
+  .sc-card ul li:last-child { border-bottom:none; }
+  .sc-card ul li::before { content:""; position:absolute; left:0; top:15px; width:6px; height:6px; border-radius:50%; }
+  .sc-card.strengths ul li::before { background:var(--green-border); }
+  .sc-card.concerns ul li::before { background:var(--red-border); }
+
+  .chart-wrapper { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:24px; }
+  .chart-canvas { position:relative; width:100%; height:380px; }
+  .chart-svg { width:100%; }
+  .legend { display:flex; flex-wrap:wrap; gap:14px; margin-bottom:16px; font-size:12px; color:var(--text-secondary); }
+  .legend span { display:flex; align-items:center; gap:6px; }
+  .legend .dot { width:11px; height:11px; border-radius:2px; display:inline-block; }
+  .dim-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px 20px; margin-bottom:12px; display:flex; gap:18px; align-items:flex-start; }
+  .dim-score { display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:64px; padding:10px 0; border-radius:10px; }
+  .dim-score .num { font-size:22px; font-weight:700; line-height:1; }
+  .dim-score .out { font-size:11px; color:var(--text-secondary); margin-top:2px; }
+  .dim-content { flex:1; min-width:0; }
+  .dim-content h3 { margin:0 0 6px; font-size:15px; }
+  .wt { display:inline-block; font-size:11px; font-weight:600; color:var(--text-tertiary); background:var(--surface-muted); border:1px solid var(--border); border-radius:20px; padding:1px 9px; margin-left:6px; vertical-align:middle; letter-spacing:0.02em; }
+  .dim-content p { margin:0; font-size:14px; line-height:1.55; }
+  .score-red { background:var(--red-fill); color:var(--red-text); }
+  .score-amber { background:var(--amber-fill); color:var(--amber-text); }
+  .score-blue { background:var(--blue-fill); color:var(--blue-text); }
+  .score-green { background:var(--green-fill); color:var(--green-text); }
+
+  /* Case study section */
+  .case-brief { background:var(--purple-fill); border:1px solid var(--purple-border); border-radius:12px; padding:18px 22px; margin-bottom:22px; }
+  .case-brief .lbl { font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--purple-text); font-weight:700; margin-bottom:6px; }
+  .case-brief p { color:var(--text-primary); margin:0; font-size:14px; line-height:1.55; }
+  .scorehead { display:flex; align-items:center; gap:22px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:20px 24px; }
+  .scorehead .lbl2 { font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-tertiary); font-weight:700; margin-bottom:4px; }
+  .scorehead .big2 { font-size:26px; font-weight:700; color:var(--text-primary); line-height:1.1; margin-bottom:6px; }
+  .scorehead .big2 small { font-size:14px; font-weight:400; color:var(--text-secondary); }
+  .scorehead .sub2 { font-size:13px; color:var(--text-secondary); line-height:1.5; }
+  .calc { display:flex; align-items:stretch; gap:12px; flex-wrap:wrap; }
+  .calc-card { flex:1; min-width:150px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; display:flex; flex-direction:column; justify-content:space-between; }
+  .calc-card.calc-total { background:var(--surface-muted); border-color:var(--border-strong); }
+  .calc-lbl { font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-tertiary); font-weight:700; line-height:1.4; margin-bottom:10px; }
+  .calc-lbl span { font-weight:400; text-transform:none; letter-spacing:0; font-size:11px; color:var(--text-secondary); }
+  .calc-val { font-size:32px; font-weight:700; color:var(--text-primary); line-height:1; }
+  .calc-total .calc-val { color:var(--accent); }
+  .calc-op { display:flex; align-items:center; font-size:20px; font-weight:700; color:var(--text-tertiary); }
+  .gates { display:flex; gap:12px; flex-shrink:0; }
+  .gate { border-radius:12px; padding:12px 16px; text-align:center; min-width:104px; border:1.5px solid; background:rgba(255,255,255,0.6); }
+  .gate .g-lbl { font-size:11px; text-transform:uppercase; letter-spacing:0.06em; font-weight:700; margin-bottom:2px; }
+  .gate .g-val { font-size:28px; font-weight:700; line-height:1.1; }
+  .gate .g-req { font-size:11px; font-weight:600; margin-top:2px; }
+  .gate-pass { border-color:var(--green-border); }
+  .gate-pass .g-lbl, .gate-pass .g-val, .gate-pass .g-req { color:var(--green-text); }
+  .gate-fail { border-color:var(--red-border); }
+  .gate-fail .g-lbl, .gate-fail .g-val, .gate-fail .g-req { color:var(--red-text); }
+  .facet-grid { display:flex; flex-wrap:wrap; gap:12px; margin-top:8px; }
+  .facet { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; flex:1 1 calc(50% - 6px); min-width:240px; }
+  .facet .top { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; }
+  .facet .name { font-weight:600; font-size:14px; color:var(--text-primary); }
+  .facet p { font-size:13px; margin:0; line-height:1.5; }
+  .rpill { display:inline-block; padding:3px 11px; border-radius:11px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; }
+  .r-strong { background:var(--green-fill); color:var(--green-text); }
+  .r-solid { background:var(--blue-fill); color:var(--blue-text); }
+  .r-mixed { background:var(--amber-fill); color:var(--amber-text); }
+  .r-weak { background:var(--red-fill); color:var(--red-text); }
+
+  .handoff-note { background:var(--surface-muted); border-left:4px solid var(--purple-border); border-radius:10px; padding:14px 18px; margin-bottom:18px; font-size:14px; color:var(--text-secondary); line-height:1.55; }
+  .handoff-note strong { color:var(--text-primary); }
+
+  .interviewer-section { background:var(--surface-muted); border-radius:14px; padding:32px; margin-top:16px; }
+  .interviewer-section h2 { border-bottom:1px solid var(--border-strong); }
+  .interviewer-header { display:flex; align-items:center; gap:16px; margin-bottom:20px; flex-wrap:wrap; }
+  .interviewer-score { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 18px; display:flex; align-items:baseline; gap:6px; }
+  .interviewer-score .big { font-size:28px; font-weight:700; }
+  .interviewer-score .small { font-size:14px; color:var(--text-secondary); }
+  .interviewer-name { font-size:14px; color:var(--text-secondary); }
+  .interviewer-name strong { color:var(--text-primary); font-weight:600; }
+  .fb { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 24px; margin-bottom:14px; }
+  .fb.went-well { border-left:4px solid var(--green-border); }
+  .fb.missed { border-left:4px solid var(--red-border); }
+  .fb.next { border-left:4px solid var(--blue-border); }
+  .fb h3 { margin-top:0; }
+  .fb ul { list-style:none; padding:0; margin:0; }
+  .fb ul li { padding:10px 0; border-bottom:1px solid var(--border); font-size:14px; line-height:1.55; color:var(--text-secondary); }
+  .fb ul li:last-child { border-bottom:none; }
+  .fb ul li strong { color:var(--text-primary); font-weight:600; display:block; margin-bottom:4px; }
+  .fb .quote { font-style:italic; color:var(--text-primary); background:var(--surface-muted); padding:6px 10px; border-radius:6px; display:inline-block; margin:4px 0; font-size:13px; }
+  .pill { display:inline-block; padding:2px 10px; border-radius:12px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; }
+  footer { margin-top:56px; padding-top:24px; border-top:1px solid var(--border); color:var(--text-tertiary); font-size:12px; text-align:center; }
+  @media print { body{background:white;} .container{padding:24px;max-width:100%;} .hero,.chart-wrapper,.dim-card,.fb,.interviewer-section,.sc-card,.facet{break-inside:avoid;} }
+  @media (max-width:640px) { .container{padding:24px 16px 48px;} .hero{flex-direction:column;text-align:center;} .dim-card{grid-template-columns:1fr;} .dim-score{flex-direction:row;gap:8px;padding:8px 12px;align-self:start;} .sc-grid,.facet-grid{grid-template-columns:1fr;} .interviewer-section{padding:20px 16px;} }
+</style></head><body><div class="container">
+<header class="report-head">
+  <div class="eyebrow">Interview Evaluation · Round 1 — Interview</div>
+  <h1>Rohan Mehta</h1>
+  <div class="meta">Project Manager · ParallelDots (ShelfWatch delivery) · Round 1 · Interviewer: Akshay Bharti</div>
+</header>
+<div class="summary-grid">
+  <div class="stat"><div class="label">Round 1 outcome</div><div class="value">Advance</div></div>
+  <div class="stat"><div class="label">Weighted score</div><div class="value">7.2 <small>/ 10</small></div></div>
+  <div class="stat"><div class="label">Next step</div><div class="value" style="font-size:16px;">Case study round</div></div>
+</div>
+<div class="hero h-green">
+  <svg class="ring" width="118" height="118" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(0,0,0,0.09)" stroke-width="11"/>
+      <circle cx="60" cy="60" r="48" fill="none" stroke="#639922" stroke-width="11" stroke-linecap="round"
+        stroke-dasharray="301.6" stroke-dashoffset="84.4" transform="rotate(-90 60 60)"/>
+      <text x="60" y="57" text-anchor="middle" font-size="32" font-weight="700" fill="#639922">7.2</text>
+      <text x="60" y="76" text-anchor="middle" font-size="12" fill="#888780">/ 10</text>
+    </svg>
+  <div class="wrap">
+    <div class="kicker">Round 1 decision</div>
+    <div class="headline">Advance to the case study round</div>
+    <div class="sub">Advances on a weighted score of 7.2/10. Strong PM fundamentals — problem-solving (8), project depth (8) and ownership (8) — with stakeholder handling (5) the one axis still to prove in the case study.</div>
+    <div class="note"><strong>This is not a hire decision.</strong> The candidate is moving to the next (case study) round; the hire / no-hire call is made only after Round 2.</div>
+  </div>
+</div>
+<section>
+  <h2>Strengths &amp; Concerns</h2>
+  <div class="sc-grid">
+    <div class="sc-card strengths"><h3>Strengths</h3><ul>
+      <li>Answers are structured and land on the point — names his framework before solving.</li>
+      <li>Solid fundamentals: sequencing, dependency risk, and a slipped-milestone recovery, unprompted.</li>
+      <li>Did real homework — knew ShelfWatch audits shelf execution and named realistic use cases.</li>
+      <li>Owns his work in the first person when describing the Bytemint delivery.</li>
+    </ul></div>
+    <div class="sc-card concerns"><h3>Concerns</h3><ul>
+      <li>Never put under real client pressure — no read yet on pushing back with data vs. accommodating.</li>
+      <li>Motivation for <em>this</em> role stayed a little generic.</li>
+      <li>Cross-functional coordination was asserted, not evidenced.</li>
+      <li>Depth is single-account; concurrency is unproven.</li>
+    </ul></div>
+  </div>
+</section>
+<section>
+  <h2>Candidate scorecard</h2>
+  <div class="chart-wrapper">
+    <div class="legend">
+      <span><span class="dot" style="background:#e24b4a;"></span>1–3 Significant concerns</span>
+      <span><span class="dot" style="background:#ef9f27;"></span>4–5 Below bar</span>
+      <span><span class="dot" style="background:#378add;"></span>6–7 At bar</span>
+      <span><span class="dot" style="background:#1d9e75;"></span>8–10 Above bar</span>
+    </div>
+    <div class="chart-svg">
+<svg viewBox="0 0 872 378" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif" width="100%">
+<line x1="6.0" y1="10" x2="6.0" y2="352" stroke="rgba(136,135,128,0.18)" stroke-width="1"/>
+<text x="6.0" y="368" text-anchor="middle" font-size="11" fill="#888780">0</text>
+<line x1="168.4" y1="10" x2="168.4" y2="352" stroke="rgba(136,135,128,0.18)" stroke-width="1"/>
+<text x="168.4" y="368" text-anchor="middle" font-size="11" fill="#888780">2</text>
+<line x1="330.8" y1="10" x2="330.8" y2="352" stroke="rgba(136,135,128,0.18)" stroke-width="1"/>
+<text x="330.8" y="368" text-anchor="middle" font-size="11" fill="#888780">4</text>
+<line x1="493.2" y1="10" x2="493.2" y2="352" stroke="rgba(136,135,128,0.18)" stroke-width="1"/>
+<text x="493.2" y="368" text-anchor="middle" font-size="11" fill="#888780">6</text>
+<line x1="655.6" y1="10" x2="655.6" y2="352" stroke="rgba(136,135,128,0.18)" stroke-width="1"/>
+<text x="655.6" y="368" text-anchor="middle" font-size="11" fill="#888780">8</text>
+<line x1="818.0" y1="10" x2="818.0" y2="352" stroke="rgba(136,135,128,0.18)" stroke-width="1"/>
+<text x="818.0" y="368" text-anchor="middle" font-size="11" fill="#888780">10</text>
+<text x="6" y="23" font-size="12.5" font-weight="600" fill="#444441">Problem-solving &amp; structured thinking (20%)</text>
+<rect x="6" y="30" width="649.6" height="15" rx="4" fill="#1d9e75"/>
+<text x="663.6" y="42" font-size="12" font-weight="700" fill="#1d9e75">8 / 10</text>
+<text x="6" y="75" font-size="12.5" font-weight="600" fill="#444441">Stakeholder &amp; cross-functional skill (20%)</text>
+<rect x="6" y="82" width="406.0" height="15" rx="4" fill="#ef9f27"/>
+<text x="420.0" y="94" font-size="12" font-weight="700" fill="#ef9f27">5 / 10</text>
+<text x="6" y="127" font-size="12.5" font-weight="600" fill="#444441">Project / client management depth (18%)</text>
+<rect x="6" y="134" width="649.6" height="15" rx="4" fill="#1d9e75"/>
+<text x="663.6" y="146" font-size="12" font-weight="700" fill="#1d9e75">8 / 10</text>
+<text x="6" y="179" font-size="12.5" font-weight="600" fill="#444441">Ownership &amp; trajectory (15%)</text>
+<rect x="6" y="186" width="649.6" height="15" rx="4" fill="#1d9e75"/>
+<text x="663.6" y="198" font-size="12" font-weight="700" fill="#1d9e75">8 / 10</text>
+<text x="6" y="231" font-size="12.5" font-weight="600" fill="#444441">Communication &amp; clarity (12%)</text>
+<rect x="6" y="238" width="649.6" height="15" rx="4" fill="#1d9e75"/>
+<text x="663.6" y="250" font-size="12" font-weight="700" fill="#1d9e75">8 / 10</text>
+<text x="6" y="283" font-size="12.5" font-weight="600" fill="#444441">Domain / AI-product sense (8%)</text>
+<rect x="6" y="290" width="568.4" height="15" rx="4" fill="#378add"/>
+<text x="582.4" y="302" font-size="12" font-weight="700" fill="#378add">7 / 10</text>
+<text x="6" y="335" font-size="12.5" font-weight="600" fill="#444441">Stability &amp; motivation (7%)</text>
+<rect x="6" y="342" width="568.4" height="15" rx="4" fill="#378add"/>
+<text x="582.4" y="354" font-size="12" font-weight="700" fill="#378add">7 / 10</text>
+</svg>
+</div>
+  </div>
+  <h3 style="margin-top:28px;">Detailed justifications</h3>
+  <div class="dim-card">
+    <div class="dim-score score-green"><div class="num">8</div><div class="out">/ 10</div></div>
+    <div class="dim-content"><h3>Problem-solving & structured thinking <span class="wt">20%</span></h3><p>Decomposed the two-clients-one-engineer scenario cleanly — impact, effort, contractual commitment — and asked a clarifying SLA question before answering rather than jumping in. Consistently structured.</p></div>
+  </div>
+  <div class="dim-card">
+    <div class="dim-score score-amber"><div class="num">5</div><div class="out">/ 10</div></div>
+    <div class="dim-content"><h3>Stakeholder & cross-functional skill <span class="wt">20%</span></h3><p>Talked about coordinating engineering and a client, but no hard client moment was staged, so this is largely untested — and his language leaned toward keeping everyone happy rather than pushing back with data. The clear gap to probe in the case study.</p></div>
+  </div>
+  <div class="dim-card">
+    <div class="dim-score score-green"><div class="num">8</div><div class="out">/ 10</div></div>
+    <div class="dim-content"><h3>Project / client management depth <span class="wt">18%</span></h3><p>Walked the Bytemint rollout end to end with named tools (Jira, a RAID log) and a real slipped-milestone recovery — genuine, specific end-to-end ownership. The one open question is breadth across concurrent clients.</p></div>
+  </div>
+  <div class="dim-card">
+    <div class="dim-score score-green"><div class="num">8</div><div class="out">/ 10</div></div>
+    <div class="dim-content"><h3>Ownership & trajectory <span class="wt">15%</span></h3><p>Uses the first person correctly and described specific decisions he owned on Bytemint, not just tasks. Career arc is steadily upward (coordinator → PM) and he is investing in himself (a scheduling certification in progress).</p></div>
+  </div>
+  <div class="dim-card">
+    <div class="dim-score score-green"><div class="num">8</div><div class="out">/ 10</div></div>
+    <div class="dim-content"><h3>Communication & clarity <span class="wt">12%</span></h3><p>Structured, concise, listens before answering. Restated the prioritisation problem and named his approach before solving, which made him easy to follow throughout.</p></div>
+  </div>
+  <div class="dim-card">
+    <div class="dim-score score-blue"><div class="num">7</div><div class="out">/ 10</div></div>
+    <div class="dim-content"><h3>Domain / AI-product sense <span class="wt">8%</span></h3><p>Understood what ShelfWatch does and reasoned sensibly about why a Perfect Store score would move. Correctly not pushed on ML depth — comfortable with an accuracy number without over-claiming.</p></div>
+  </div>
+  <div class="dim-card">
+    <div class="dim-score score-blue"><div class="num">7</div><div class="out">/ 10</div></div>
+    <div class="dim-content"><h3>Stability & motivation <span class="wt">7%</span></h3><p>Solid tenure (~2 years per role) and genuine interest; the pull toward ParallelDots specifically could be a little sharper — worth firming up in the case study round.</p></div>
+  </div>
+</section>
+<section>
+  <h2>Handoff to Round 2 (case study round)</h2>
+  <div class="handoff-note">A few areas that would round out the picture — worth exploring in the case study round alongside the exercise itself. A specific question is suggested for each, so the next interviewer can close the loop directly.</div>
+  <div class="fb next">
+    <h3><span class="pill" style="background:var(--blue-fill);color:var(--blue-text);">Areas to explore further in Round 2</span></h3>
+    <ul>
+      <li><strong>Handling a difficult client.</strong> Round 1 centred on delivery mechanics; seeing him in a live client-pressure situation would complete the read on this role's most important skill.
+        <div class="quote">Ask to close the loop: "A client says ShelfWatch's results are wrong and is threatening to churn — walk me through exactly what you do in the first 48 hours, and who you bring in."</div></li>
+      <li><strong>Motivation and fit.</strong> His interest came across as sincere but general; it would help to hear what specifically draws him to ParallelDots.
+        <div class="quote">Ask to close the loop: "Why ParallelDots and this role in particular, and what would make you want to stay for the next 3+ years?"</div></li>
+      <li><strong>Cross-functional coordination.</strong> He referenced working across engineering and clients; a concrete example would confirm the depth of that experience.
+        <div class="quote">Ask to close the loop: "Tell me about a specific time engineering and a client disagreed on scope or a deadline — what did you personally do to resolve it?"</div></li>
+    </ul>
+  </div>
+</section>
+<section class="interviewer-section">
+  <h2>Interviewer Performance</h2>
+  <div class="interviewer-header">
+    <div class="interviewer-score"><span class="big">3</span><span class="small">/ 5</span></div>
+    <div class="interviewer-name">Interviewer: <strong>Akshay Bharti</strong> · Round 1</div>
+  </div>
+  <p style="margin-bottom:20px;">Scored on coverage of the high-weight dimensions. Problem-solving (20%), project depth (18%) and ownership (15%) were all probed well — but stakeholder &amp; cross-functional skill (20%), the joint-highest axis, went untested, which caps this at 3.</p>
+  <div class="fb went-well"><h3><span class="pill" style="background:var(--green-fill);color:var(--green-text);">What went well</span></h3><ul>
+    <li><strong>Covered a JD-critical requirement.</strong> The JD leads with owning end-to-end delivery; the Bytemint deep-dive got real signal on exactly that.</li>
+    <li><strong>Strong behavioural follow-up.</strong> On the milestone slip you didn't accept the first answer — pushing for what he personally decided surfaced genuine ownership rather than a rehearsed story.</li>
+    <li><strong>Good use of an open scenario.</strong> Letting him think aloud on the two-clients-one-engineer prioritisation (transcript ~18 min) exposed clean structured thinking without leading him.</li>
+    <li><strong>Right calibration on domain.</strong> A light touch on ShelfWatch was appropriate — you correctly didn't over-index on AI/ML depth, which is only 8% of the weighting.</li>
+  </ul></div>
+  <div class="fb missed"><h3><span class="pill" style="background:var(--red-fill);color:var(--red-text);">What was missed / to improve</span></h3><ul>
+    <li><strong>The highest-value axis — client handling — was never tested.</strong> No difficult-client scenario was run, so the 20%-weight stakeholder dimension is unproven.
+      <div class="quote">Should have asked: "A client says ShelfWatch is giving wrong numbers and wants to churn — walk me through your next 48 hours."</div>
+      <em>To improve:</em> always stage at least one hard-client scenario in a client-facing PM interview — it's too heavily weighted to leave out.</li>
+    <li><strong>Motivation accepted at face value.</strong> "Want to grow in product delivery" is candidate-centric and wasn't drilled (transcript ~31 min).
+      <em>To improve:</em> push generic motivation answers toward "why this company and role specifically."</li>
+    <li><strong>A resume claim went unexamined.</strong> The cross-functional coordination claim got no concrete example.
+      <em>To improve:</em> ask for one specific instance whenever a candidate asserts a skill without evidence.</li>
+  </ul></div>
+</section>
+<footer>Reference example · PM Interview Evaluator skill · Round 1 layout</footer>
+</div>
+</body></html>
